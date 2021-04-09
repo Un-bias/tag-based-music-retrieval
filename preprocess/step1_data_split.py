@@ -44,6 +44,7 @@ class Processor:
             df = df[df.merged.isin(available_tags)]
 
             # add artist information to the table
+            '''
             print('add artist information...')
             song_to_artist = pickle.load(open(os.path.join(root, 'song_to_artist.pkl'), 'rb'))
             df.insert(1, 'artist', ['unknown' for _ in range(len(df))], True)
@@ -51,7 +52,7 @@ class Processor:
                     artist_id = song_to_artist[song_id]
                     df.loc[df.id==song_id, 'artist'] = artist_id
             df = df[~df.artist.isin(['unknown'])]
-
+            '''
             # save dataframe
             df.to_csv(os.path.join(root, 'processed_df.tsv'), sep='\t', header=None)
         else:
