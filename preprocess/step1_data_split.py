@@ -25,7 +25,7 @@ class Processor:
             # load data
             print('load data...')
             filename = os.path.join(root, 'track_tags.tsv')
-            df = pd.read_csv(filename, sep='\t', names=['id', 'tag', 'merged', 'type', 'score'])
+            df = pd.read_csv(filename, sep='\t', names=['id', 'artist', 'tag', 'merged', 'type', 'score'])
             w2v = api.load('word2vec-google-news-300')
 
             # score threshold
@@ -43,8 +43,8 @@ class Processor:
                     continue
             df = df[df.merged.isin(available_tags)]
 
-            # add artist information to the table
             '''
+            # add artist information to the table
             print('add artist information...')
             song_to_artist = pickle.load(open(os.path.join(root, 'song_to_artist.pkl'), 'rb'))
             df.insert(1, 'artist', ['unknown' for _ in range(len(df))], True)
