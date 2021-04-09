@@ -24,7 +24,7 @@ class Processor:
         if not os.path.exists(os.path.join(root, 'processed_df.tsv')):
             # load data
             print('load data...')
-            filename = os.path.join(root, 'msd500', 'track_tags.tsv')
+            filename = os.path.join(root, 'track_tags.tsv')
             df = pd.read_csv(filename, sep='\t', names=['id', 'tag', 'merged', 'type', 'score'])
             w2v = api.load('word2vec-google-news-300')
 
@@ -62,7 +62,7 @@ class Processor:
     def get_existing(self, root, df, top_n):
         # get only exsisting item
         print('get available song ids...')
-        existing_path = glob.glob(os.path.join(root, 'spec/*/*/*/*.npy'))
+        existing_path = glob.glob(os.path.join(root, 'npy/*.npy'))
         existing_ids = [line.split('/')[-1][:-4] for line in existing_path]
         df = df[df.id.isin(existing_ids)]
 
