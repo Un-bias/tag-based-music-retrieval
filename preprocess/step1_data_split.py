@@ -7,6 +7,7 @@ import glob
 import numpy as np
 import pandas as pd
 import gensim.downloader as api
+from gensim.models import Word2Vec
 from collections import Counter
 
 
@@ -26,7 +27,9 @@ class Processor:
             print('load data...')
             filename = os.path.join(root, 'track_tags.tsv')
             df = pd.read_csv(filename, sep='\t', names=['id', 'artist', 'tag', 'merged', 'type', 'score'])
-            w2v = api.load('word2vec-google-news-300')
+            #w2v = api.load('word2vec-google-news-300')
+            model = Word2Vec.load('/home/os/dataiku/data/jupyter-run/dku-workdirs/1M/tag-based-music-retrieval75c3492f/data/music_w2v/model_semeval_trigrams_300.model')
+            w2v = model.wv
 
             # score threshold
             df = df[df.score>=50]
