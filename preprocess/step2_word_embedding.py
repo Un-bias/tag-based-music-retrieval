@@ -22,6 +22,7 @@ class Processor:
             sub_tag = sub_tags[0]
             
             emb = google_wv.get_vector(sub_tag)
+            emb = np.copy(emb)
             for sub_tag in sub_tags:
                 if not sub_tag in stopwords:
                     emb += google_wv.get_vector(sub_tag)                
