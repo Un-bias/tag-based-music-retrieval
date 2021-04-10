@@ -59,7 +59,7 @@ class MyDataset(data.Dataset):
 		return self.cf[song_ix]
 
 	def load_spec(self, song_id):
-		fn = os.path.join(self.data_path, 'spec', song_id[2], song_id[3], song_id[4], song_id+'.npy')
+		fn = os.path.join(self.data_path, 'npy', song_id+'.npy')
 		length = self.input_length
 		spec = np.load(fn)
 
