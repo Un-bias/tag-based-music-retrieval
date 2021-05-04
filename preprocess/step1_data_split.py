@@ -68,7 +68,7 @@ class Processor:
         print('get available song ids...')
         existing_path = glob.glob(os.path.join(root, 'npy/*.npy'))
         existing_ids = [line.split('/')[-1][:-4] for line in existing_path]
-        df = df[df.id.isin(existing_ids)]
+        #df = df[df.id.isin(existing_ids)]
 
         # get top 100 tags
         top100 = Counter(df.merged).most_common(top_n)
