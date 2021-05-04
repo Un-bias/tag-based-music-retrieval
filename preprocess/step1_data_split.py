@@ -89,6 +89,8 @@ class Processor:
             ids = np.array(ids)
             np.save(open(os.path.join(root, 'existing_ids.npy'), 'wb'), ids)
 
+            
+            '''
             binaries = np.zeros((len(ids), len(tags)))
             i = 0
             for msd_id in tqdm.tqdm(ids):
@@ -96,6 +98,12 @@ class Processor:
                     for tag in annotations:
                             binaries[i, tag_to_index[tag.lower()]] = 1
                     i += 1
+            '''
+            binaries = df[["id","tag"]].copy()
+            binaries["value"] = 1
+            binaries = pd.pivot_table(binaries, index="id",columns=["tag"],values='value').fillna(0)
+            binaries = binaries.sort_values(ascending=True, by="id").values
+
             np.save(open(os.path.join(root, 'binaries.npy'), 'wb'), binaries)
             np.save(open(os.path.join(root, 'tags.npy'), 'wb'), tags)
         else:
