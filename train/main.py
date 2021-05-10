@@ -19,6 +19,7 @@ def main(config):
 					  gpus=config.gpu_id,
 					  logger=logger,
 					  checkpoint_callback=checkpoint_callback,
+					  resume_from_checkpoint=config.model_load_path,
 					  max_epochs=config.n_epochs)
 	if config.mode == 'TRAIN':
 		trainer.fit(solver)
