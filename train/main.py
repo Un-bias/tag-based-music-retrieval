@@ -15,12 +15,22 @@ def main(config):
 										  monitor="map",
 										  mode="max",
 										  prefix="")
-	trainer = Trainer(default_root_dir=config.model_save_path,
-					  gpus=config.gpu_id,
-					  logger=logger,
-					  checkpoint_callback=checkpoint_callback,
-					  resume_from_checkpoint=config.model_load_path,
-					  max_epochs=config.n_epochs)
+	
+	if config.model_load_path != ".":
+		# resume
+		trainer = Trainer(default_root_dir=config.model_save_path,
+						  gpus=config.gpu_id,
+						  logger=logger,
+						  checkpoint_callback=checkpoint_callback,
+						  resume_from_checkpoint=config.model_load_path,
+						  max_epochs=config.n_epochs)
+	else:
+		trainer = Trainer(default_root_dir=config.model_save_path,
+						  gpus=config.gpu_id,
+						  logger=logger,
+						  checkpoint_callback=checkpoint_callback,
+						  max_epochs=config.n_epochs)
+		
 	if config.mode == 'TRAIN':
 		trainer.fit(solver)
 		trainer.save_checkpoint(os.path.join(config.model_save_path, 'last.ckpt'))
