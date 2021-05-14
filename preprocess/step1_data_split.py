@@ -57,7 +57,7 @@ class Processor:
             '''
             # save dataframe
             df.to_csv(os.path.join(root, 'processed_df.tsv'), sep='\t', header=None)
-        return df
+            return df
 
     def get_existing(self, root, df, top_n):
         # get only exsisting item
