@@ -22,7 +22,6 @@ class Processor:
         self.save(root, ids, binaries, tags, train_ix, valid_ix, test_ix)
 
     def get_dataframe(self, root):
-        if not os.path.exists(os.path.join(root, 'processed_df.tsv')):
             # load data
             print('load data...')
             filename = os.path.join(root, 'track_tags.tsv')
@@ -58,9 +57,6 @@ class Processor:
             '''
             # save dataframe
             df.to_csv(os.path.join(root, 'processed_df.tsv'), sep='\t', header=None)
-        else:
-            print('load data...')
-            df = pd.read_csv(os.path.join(root, 'processed_df.tsv'), sep='\t', names=['id', 'artist', 'tag', 'merged', 'type', 'score'])
         return df
 
     def get_existing(self, root, df, top_n):
@@ -79,37 +75,32 @@ class Processor:
 
         # id to binary
         print('get binaries...')
-        if not os.path.exists(os.path.join(root, 'binaries.npy')):
-            tags = [tag.lower() for tag in tags]
-            tags.sort()
-            tag_to_index = {tags[i]: i for i in range(len(tags))}
+        tags = [tag.lower() for tag in tags]
+        tags.sort()
+        tag_to_index = {tags[i]: i for i in range(len(tags))}
 
-            ids = [msd_id for msd_id in set(df.id)]
-            ids.sort()
-            ids = np.array(ids)
-            np.save(open(os.path.join(root, 'existing_ids.npy'), 'wb'), ids)
+        ids = [msd_id for msd_id in set(df.id)]
+        ids.sort()
+        ids = np.array(ids)
+        np.save(open(os.path.join(root, 'existing_ids.npy'), 'wb'), ids)
 
-            
-            '''
-            binaries = np.zeros((len(ids), len(tags)))
-            i = 0
-            for msd_id in tqdm.tqdm(ids):
-                    annotations = list(df[df.id==msd_id].merged)
-                    for tag in annotations:
-                            binaries[i, tag_to_index[tag.lower()]] = 1
-                    i += 1
-            '''
-            binaries = df[["id","tag"]].copy()
-            binaries["value"] = 1
-            binaries = pd.pivot_table(binaries, index="id",columns=["tag"],values='value').fillna(0)
-            binaries = binaries.sort_values(ascending=True, by="id").values
 
-            np.save(open(os.path.join(root, 'binaries.npy'), 'wb'), binaries)
-            np.save(open(os.path.join(root, 'tags.npy'), 'wb'), tags)
-        else:
-            ids = np.load(os.path.join(root, 'existing_ids.npy'))
-            binaries = np.load(os.path.join(root, 'binaries.npy'))
-            tags = np.load(os.path.join(root, 'tags.npy'))
+        '''
+        binaries = np.zeros((len(ids), len(tags)))
+        i = 0
+        for msd_id in tqdm.tqdm(ids):
+                annotations = list(df[df.id==msd_id].merged)
+                for tag in annotations:
+                        binaries[i, tag_to_index[tag.lower()]] = 1
+                i += 1
+        '''
+        binaries = df[["id","tag"]].copy()
+        binaries["value"] = 1
+        binaries = pd.pivot_table(binaries, index="id",columns=["tag"],values='value').fillna(0)
+        binaries = binaries.sort_values(ascending=True, by="id").values
+
+        np.save(open(os.path.join(root, 'binaries.npy'), 'wb'), binaries)
+        np.save(open(os.path.join(root, 'tags.npy'), 'wb'), tags)
         return df, ids, binaries, tags
 
     def split(self, df, ids, binaries, tags, threshold):
